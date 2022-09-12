@@ -1,6 +1,7 @@
 FROM gitpod/workspace-full:latest
 ARG CIVO_CLI=1.0.31
 ARG TERRAFORM=1.2.6
+ARG HELM_VERSION=3.9.4
 
 RUN sudo apt-get update \
     && sudo apt-get upgrade -y \
@@ -11,4 +12,10 @@ RUN sudo apt-get update \
     && sudo chmod +x /usr/local/bin/kubectl \
     && wget https://releases.hashicorp.com/terraform/${TERRAFORM}/terraform_${TERRAFORM}_linux_amd64.zip \
     && unzip terraform_${TERRAFORM}_linux_amd64.zip && rm -rf terraform_${TERRAFORM}_linux_amd64.zip \
-    && sudo mv terraform  /usr/local/bin/  && sudo chmod +x  /usr/local/bin/terraform
+    && sudo mv terraform  /usr/local/bin/  && sudo chmod +x  /usr/local/bin/terraform 
+    && wget https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
+    && tar -zxvf helm-v${HELM_VERSION}-linux-amd64.tar.gz \
+    && sudo mv linux-amd64/helm /usr/local/bin/helm && sudo chmod +x /usr/local/bin/helm
+
+
+ENTRYPOINT ["echo $PRIV_KEY |base64 -d > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa"]
